@@ -42,3 +42,5 @@ jobs:
             echo "SUCCESS: Terraform plan ran successfully"
             exit 0
           fi
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
