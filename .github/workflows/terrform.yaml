@@ -44,9 +44,10 @@ jobs:
           fi
       - name: Publish terraform plan
         uses: actions/upload-artifact@v4
-          with:
-            name: tfplan
-            path: tfplan
+        with:
+          name: tfplan
+          path: tfplan
+          
   terraform-apply:
     name: "Terraform Apply"
     runs-on: ubuntu-latest
