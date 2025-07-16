@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   terraform:
-    name: Terraform code Deployement
+    name: Terraform code Deployment
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,5 +26,19 @@ jobs:
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_wrapper: false
+      - name: Terraform fmt
+        run: terraform fmt -check
       - name: Terraform Init
         run: terraform init
+      - name: Terraform plan
+        run: |
+          export exitcode=0
+          terraform plan
+          echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
+          if [ $exitcode -eq 1 ]; then
+            echo "Error: Terraform plan failed to run"
+            exit 1
+          else
+            echo "Terrafrom plan was successful"
+            exit 0
+          fi
