@@ -16,8 +16,8 @@ permissions:
   pull-requests: write
 
 jobs:
-  terraform:
-    name: Terraform code Deployment
+  terraform-plan:
+    name: Terraform Plan
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -33,7 +33,7 @@ jobs:
       - name: Terraform plan
         run: |
           export exitcode=0
-          terraform plan
+          terraform plan -no-color -out tfplan
           echo "exitcode=$exitcode" >> $GITHUB_OUTPUT
           if [ $exitcode -eq 1 ]; then
             echo "Error: Terraform plan failed to run"
@@ -42,5 +42,28 @@ jobs:
             echo "SUCCESS: Terraform plan ran successfully"
             exit 0
           fi
+      - name: Publish terraform plan
+        uses: actions/upload-artifact@v4
+          with:
+            name: tfplan
+            path: tfplan
+  terraform-apply:
+    name: "Terraform Apply"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_wrapper: false
+      - name: Terraform fmt
+        run: terraform fmt -recursive
+      - name: Terraform Init
+        run: terraform init
+      - name: Download Terraform Plan
+        uses: actions/download_artifact@v4
+        with:
+          name: tfplan
       - name: Terraform Apply
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve tfplan
