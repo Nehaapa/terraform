@@ -39,6 +39,6 @@ jobs:
             echo "Error: Terraform plan failed to run"
             exit 1
           else
-            echo "Terrafrom plan was successful"
+            echo "SUCCESS: Terraform plan ran successfully"
             exit 0
           fi

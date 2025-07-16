@@ -29,6 +29,16 @@ resource "azurerm_resource_group" "rg" {
   }
 }
 
+resource "azurerm_resource_group" "rg_1" {
+  name     = var.resource_group_name_1
+  location = "westus2"
+  tags = {
+    Environment = "Terraform Getting Started"
+    Team        = "DevOps"
+    Company     = "Neha and Company"
+  }
+}
+
 # Create a virtual network
 resource "azurerm_virtual_network" "vnet" {
   name                = var.vnet_name
